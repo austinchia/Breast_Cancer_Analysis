@@ -44,7 +44,7 @@ bc_raw$Accession <- sapply(strsplit(bc_raw$Accession,";"), `[`, 1)
 # exports accession numbers to upload to Uniprot
 fwrite(data.frame(bc_raw$Accession), "BC_Accession.csv", sep = ",")
 
-# ============== 4. Combines Uniprot Data To Combined Matrix & Exports Matrix ======
+# ============== 4. Combines Uniprot Data To Combined Matrix & Exports Matrix (No Imputation) ======
 # reads in Gene Symbol table downloaded from Uniprot
 gene_symbol <- fread("BC_Accession_Map.tsv",sep=',')
 
@@ -79,8 +79,8 @@ ratio_combined_no_na <- left_join(bc_raw,
                                 paste0(`Gene Symbol`, "-", `GS_count`))) %>%
   select(-c(`GS_count`, `Accession`))
 
-# exports combined abundance ratio matrix to csv
-fwrite(ratio_combined_no_na, "breast_cancer_combined_GS.csv", sep = ",")
+# exports combined abundance ratio matrix to csv (no imputation)
+fwrite(ratio_combined_no_na, "Output/breast_cancer_combined_GS.csv", sep = ",")
 
 # ============== 5. Imputes Data Using 1/5 of Min. Value & Exports Combined Matrix ======
 # removes first 2 rows of group labels
@@ -94,4 +94,7 @@ ratio_combined_no_group <- ratio_combined_no_group %>%
 # replaces all NAs with 1/5 of minimum positive value
 ratio_combined_no_group[2:ncol(ratio_combined_no_group)] <- lapply(ratio_combined_no_group[2:ncol(ratio_combined_no_group)],
                                                                    function(x) replace(x, x == 0, min(x[x>0], na.rm = TRUE)/5))
+
+# exports combined abundance ratio matrix to csv
+fwrite(ratio_combined_no_group, "Output/breast_cancer_combined_GS_imputed.csv", sep = ",")
 
