@@ -1,2 +1,3 @@
-# Breast_Cancer_Analysis
-Data analysis of Breast Cancer Dataset
+# Breast Cancer Analysis
+Data analysis, cleaning and Principal Component Analysis of Breast Cancer Data
+
